@@ -14,6 +14,12 @@ MOVE_UP = 'U'
 # Please put your code here (imports, variables, functions...)
 ##############################################################
 
+def distance (la, lb) :
+
+    # Manhattan distance
+    ax, ay = la
+    bx, by = lb
+    return abs(bx - ax) + abs(by - ay)
 
 
 
@@ -33,15 +39,8 @@ MOVE_UP = 'U'
 
 def preprocessing (maze_map, maze_width, maze_height, player_location, opponent_location, pieces_of_cheese, time_allowed) :
     
-    # Example prints that appear in the shell only at the beginning of the game
-    # Remove them when you write your own program
-    print("maze_map", type(maze_map), maze_map)
-    print("maze_width", type(maze_width), maze_width)
-    print("maze_height", type(maze_height), maze_height)
-    print("player_location", type(player_location), player_location)
-    print("opponent_location", type(opponent_location), opponent_location)
-    print("pieces_of_cheese", type(pieces_of_cheese), pieces_of_cheese)
-    print("time_allowed", type(time_allowed), time_allowed)
+    # Nothing to do here
+    pass
 
 
 
@@ -62,9 +61,23 @@ def preprocessing (maze_map, maze_width, maze_height, player_location, opponent_
 
 def turn (maze_map, maze_width, maze_height, player_location, opponent_location, player_score, opponent_score, pieces_of_cheese, time_allowed) :
     
-    # We go up at every turn
-    # You should replace this with more intelligent decisions
-    return MOVE_UP
-
-
+    # Greedy approach
+    closest_poc = (-1, -1)
+    best_distance = maze_width + maze_height
+    for poc in pieces_of_cheese :
+        if distance(poc, player_location) < best_distance :
+            best_distance = distance(poc, player_location)
+            closest_poc = poc
+    
+    # Associated move
+    ax, ay = player_location
+    bx, by = closest_poc
+    if bx > ax :
+        return MOVE_RIGHT
+    elif bx < ax :
+        return MOVE_LEFT
+    elif by > ay :
+        return MOVE_UP
+    else :
+        return MOVE_DOWN
 

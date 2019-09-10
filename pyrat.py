@@ -68,9 +68,6 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         player = importlib.util.spec_from_file_location("player",filename)
         module = importlib.util.module_from_spec(player)
         player.loader.exec_module(module)
-        name = filename.split("/")[-1].split(".")[0]        
-        preprocessing = module.preprocessing
-        turn = module.turn
         existence = True
     # In case there is a problem, we launch the dummy AI which basically does nothing
     except:
@@ -78,13 +75,14 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
             var = traceback.format_exc()
             print("Error: " + var, file=sys.stderr)
             print("Error while loading player controlling " + pet + ", dummy player loaded instead", file=sys.stderr)
-        player = importlib.util.spec_from_file_location("player","imports/dummyplayer.py")
+        player = importlib.util.spec_from_file_location("player","imports/dummy_player.py")
         module = importlib.util.module_from_spec(player)
         player.loader.exec_module(module)        
-        name = module.TEAM_NAME
-        preprocessing = module.preprocessing
-        turn = module.turn
         existence = False
+    # We retrieve the essential parts
+    name = filename.split("/")[-1].split(".")[0]
+    preprocessing = module.preprocessing
+    turn = module.turn
     # We communicate our name to the main program
     q_out.put(name)
     # And we get useful information in return
