@@ -17,9 +17,9 @@
 #    along with PyRat.  If not, see <http://www.gnu.org/licenses/>.
 
 # Imports
-from imports.parameters import *
-from imports.maze import *
-from imports.display import *
+from resources.imports.parameters import *
+from resources.imports.maze import *
+from resources.imports.display import *
 import importlib.util
 import sys
 import time
@@ -39,9 +39,9 @@ if args.import_keras:
 try:
     if not(args.nodrawing) and not(args.save_images):
         pygame.mixer.init(frequency = 44100, size = -16, channels = 1, buffer = 2**12)
-        effect_left = pygame.mixer.Sound("resources/cheese_left.wav")
-        effect_right = pygame.mixer.Sound("resources/cheese_right.wav")
-        effect_both = pygame.mixer.Sound("resources/cheese_both.wav")
+        effect_left = pygame.mixer.Sound("resources" + os.path.sep + "sounds" + os.path.sep + "cheese_left.wav")
+        effect_right = pygame.mixer.Sound("resources" + os.path.sep + "sounds" + os.path.sep + "cheese_right.wav")
+        effect_both = pygame.mixer.Sound("resources" + os.path.sep + "sounds" + os.path.sep + "cheese_both.wav")
         nosound = False
     else:
         1/0
@@ -75,12 +75,12 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
             var = traceback.format_exc()
             print("Error: " + var, file=sys.stderr)
             print("Error while loading player controlling " + pet + ", dummy player loaded instead", file=sys.stderr)
-        player = importlib.util.spec_from_file_location("player","imports/dummy_player.py")
+        player = importlib.util.spec_from_file_location("player","resources" + os.path.sep + "imports" + os.path.sep + "dummy_player.py")
         module = importlib.util.module_from_spec(player)
         player.loader.exec_module(module)        
         existence = False
     # We retrieve the essential parts
-    name = filename.split("/")[-1].split(".")[0]
+    name = filename.split(str(os.path.sep))[-1].split(".")[0]
     preprocessing = module.preprocessing
     turn = module.turn
     # We communicate our name to the main program
@@ -219,7 +219,7 @@ def run_game(screen, infoObject):
     if pieces_of_cheese == []:
         pieces_of_cheese, player1_location, player2_location = generate_pieces_of_cheese(args.pieces, width, height, not(args.nonsymmetric), player1_location, player2_location, args.start_random)
     if args.save:
-        savefile = open("saves/"+str(int(round(time.time() * 1000))),'w')
+        savefile = open("saves" + os.path.sep +str(int(round(time.time() * 1000))),'w')
         savefile.write("# Random seed\n")
         savefile.write(str(random_seed)+"\n")
         savefile.write("# MazeMap\n")
@@ -499,7 +499,7 @@ def main():
     if not(args.nodrawing):
         if not(args.save_images):
             infoObject = pygame.display.Info()
-            image_icon = pygame.image.load("resources/various/pyrat.ico")
+            image_icon = pygame.image.load("resources" + os.path.sep + "various" + os.path.sep + "pyrat.ico")
             pygame.display.set_icon(image_icon)
             pygame.display.set_caption("PyRat")
             if args.fullscreen:
