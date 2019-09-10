@@ -1,8 +1,9 @@
 # About
 
-This is the software of the course [PyRat](http://formations.telecom-bretagne.eu/pyrat).
+This is the software of the course [PyRat](https://formations.imt-atlantique.fr/pyrat).
 
 Code by Vincent Gripon
+Fork revised and maintained by Bastien Pasdeloup
 
 Illustrations by Lauren Lefumeur-Pasdeloup and Christina Roberts
 
