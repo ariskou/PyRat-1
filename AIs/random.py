@@ -14,7 +14,14 @@ MOVE_UP = 'U'
 # Please put your code here (imports, variables, functions...)
 ##############################################################
 
-import random
+import random # <-- new code (import of random module)
+
+
+
+# v-- new code (returns a random move)
+def random_move () :
+    all_moves = [MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP]
+    return random.choice(all_moves)
 
 
 
@@ -34,8 +41,7 @@ import random
 
 def preprocessing (maze_map, maze_width, maze_height, player_location, opponent_location, pieces_of_cheese, time_allowed) :
     
-    # Nothing to do here
-    pass
+    pass # <-- new code (nothing to do during preprocessing)
 
 
 
@@ -55,9 +61,8 @@ def preprocessing (maze_map, maze_width, maze_height, player_location, opponent_
 ##############################################################
 
 def turn (maze_map, maze_width, maze_height, player_location, opponent_location, player_score, opponent_score, pieces_of_cheese, time_allowed) :
-    
-    # We return a random move
-    return random.choice([MOVE_UP, MOVE_RIGHT, MOVE_LEFT, MOVE_DOWN])
+
+    return random_move() # <-- new code (return a random move)
 
 
 
