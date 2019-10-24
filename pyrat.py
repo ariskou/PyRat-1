@@ -31,6 +31,7 @@ import os
 import signal
 import pygame
 import traceback
+import datetime
 
 if args.import_keras:
     import keras
@@ -203,7 +204,15 @@ def send_info(text, q_info):
 # This is the core function that runs a game. It takes the screen as argument
 # and returns stats about the game
 def run_game(screen, infoObject):
+    
     global is_human_rat, is_human_python
+    
+    # Load saved match
+    if args.load_match :
+        args.rat = args.load_match + os.path.sep + [f for f in os.listdir(args.load_match) if f[:4] == "rat_"][0]
+        args.python = args.load_match + os.path.sep + [f for f in os.listdir(args.load_match) if f[:7] == "python_"][0]
+        args.maze_file = args.load_match + os.path.sep + "match_maze.maze"
+    
     # Generate connected maze
     debug("Generating maze",1)
     if not(args.random_seed):
@@ -212,6 +221,8 @@ def run_game(screen, infoObject):
         random_seed = args.random_seed
     print("Using seed " + str(random_seed), file=sys.stderr)
     width, height, pieces_of_cheese, maze, player1_location, player2_location = generate_maze(args.width, args.height, args.density, not(args.nonconnected), not(args.nonsymmetric), args.mud_density, args.mud_range, args.maze_file, random_seed)
+    args.pieces = len(pieces_of_cheese)
+    
     # Generate cheese
     debug("Generating pieces of cheese",1)
     if args.random_cheese:
@@ -276,6 +287,39 @@ def run_game(screen, infoObject):
     debug("Reading names of players",1)
     p1name = str(q1_out.get())
     p2name = str(q2_out.get())
+    if args.load_match :
+        p1name = p1name[4:]
+        p2name = p2name[7:]
+
+    # Prepare save match
+    if args.save_match:
+        savematch_dir = "saves" + os.path.sep + str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        os.mkdir(savematch_dir)
+        print("Match will be saved in directory", savematch_dir)
+        savematch_p1 = open(savematch_dir + os.path.sep + "rat_" + p1name + ".py", 'w')
+        savematch_p2 = open(savematch_dir + os.path.sep + "python_" + p2name + ".py", 'w')
+        savematch_maze = open(savematch_dir + os.path.sep + "match_maze.maze", 'w')
+        for f in [savematch_p1, savematch_p2] :
+            f.write("turn_nb = 0\n\n")
+            f.write("def preprocessing (maze_map, maze_width, maze_height, player_location, opponent_location, pieces_of_cheese, time_allowed) :\n")
+            f.write("    pass\n\n")
+            f.write("def turn (maze_map, maze_width, maze_height, player_location, opponent_location, player_score, opponent_score, pieces_of_cheese, time_allowed) :\n")
+            f.write("    global turn_nb\n")
+            f.write("    turn_nb += 1\n")
+        savematch_maze.write(str(width) + "\n")
+        savematch_maze.write(str(height) + "\n")
+        for cell in range(width * height) :
+            x, y = (cell % width, cell // width)
+            savematch_maze.write(str(int((x, y+1) in maze[(x, y)])) + " ")
+            savematch_maze.write(str(int((x, y-1) in maze[(x, y)])) + " ")
+            savematch_maze.write(str(int((x-1, y) in maze[(x, y)])) + " ")
+            savematch_maze.write(str(int((x+1, y) in maze[(x, y)])) + "\n")
+        savematch_maze.write(str(player1_location[1] * width + player1_location[0]) + "\n")
+        savematch_maze.write(str(player2_location[1] * width + player2_location[0]) + "\n")
+        for cheese in pieces_of_cheese :
+            savematch_maze.write(str(cheese[1] * width + cheese[0]))
+            if cheese != pieces_of_cheese[-1] :
+                savematch_maze.write(" ")
 
     # Start rendering
     debug("Starting rendering",1)
@@ -397,6 +441,14 @@ def run_game(screen, infoObject):
         if args.save:
             savefile.write(decision1 + "\n")
             savefile.write(decision2 + "\n")
+            
+
+        if args.save_match:
+            for f in [savematch_p1, savematch_p2] :
+                f.write("    if turn_nb == " + str(turns) + ":\n")
+            savematch_p1.write("        return '" + decision1 + "'\n")
+            savematch_p2.write("        return '" + decision2 + "'\n")
+            
             
         # Check if graphical interface wants us to exit the game
         try:
