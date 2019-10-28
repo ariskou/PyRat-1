@@ -14,7 +14,6 @@ MOVE_UP = 'U'
 # Please put your code here (imports, variables, functions...)
 ##############################################################
 
-
 # Import of random module
 import random
 
