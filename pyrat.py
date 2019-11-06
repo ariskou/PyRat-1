@@ -144,10 +144,10 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         except Exception as e:
             traceback.print_exc()        
             print(e, file=sys.stderr,)
-    if turn_delay_count != 0 :
+    try :
         q_out.put((prep_time, turn_delay / turn_delay_count))
-    else :
-        q_out.put((prep_time, 0))
+    except :
+        q_out.put((0, 0))
     
 # Utility function to convert strange time object to float
 def convert_time_to_int(datetime):
