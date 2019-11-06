@@ -311,10 +311,10 @@ def run_game(screen, infoObject):
         savematch_maze.write(str(height) + "\n")
         for cell in range(width * height) :
             x, y = (cell % width, cell // width)
-            savematch_maze.write(str(int((x, y+1) in maze[(x, y)])) + " ")
-            savematch_maze.write(str(int((x, y-1) in maze[(x, y)])) + " ")
-            savematch_maze.write(str(int((x-1, y) in maze[(x, y)])) + " ")
-            savematch_maze.write(str(int((x+1, y) in maze[(x, y)])) + "\n")
+            savematch_maze.write(str(maze[(x, y)][(x, y+1)] if (x, y+1) in maze[(x, y)] else 0) + " ")
+            savematch_maze.write(str(maze[(x, y)][(x, y-1)] if (x, y-1) in maze[(x, y)] else 0) + " ")
+            savematch_maze.write(str(maze[(x, y)][(x-1, y)] if (x-1, y) in maze[(x, y)] else 0) + " ")
+            savematch_maze.write(str(maze[(x, y)][(x+1, y)] if (x+1, y) in maze[(x, y)] else 0) + "\n")
         savematch_maze.write(str(player1_location[1] * width + player1_location[0]) + "\n")
         savematch_maze.write(str(player2_location[1] * width + player2_location[0]) + "\n")
         for cheese in pieces_of_cheese :
@@ -443,12 +443,13 @@ def run_game(screen, infoObject):
             savefile.write(decision1 + "\n")
             savefile.write(decision2 + "\n")
             
-
         if args.save_match:
-            for f in [savematch_p1, savematch_p2] :
-                f.write("    if turn_nb == " + str(turns) + ":\n")
-            savematch_p1.write("        return '" + decision1 + "'\n")
-            savematch_p2.write("        return '" + decision2 + "'\n")
+            if stuck1 <= 0 :
+                savematch_p1.write("    if turn_nb == " + str(turns - stucks1) + ":\n")
+                savematch_p1.write("        return '" + decision1 + "'\n")
+            if stuck2 <= 0 :
+                savematch_p2.write("    if turn_nb == " + str(turns - stucks2) + ":\n")
+                savematch_p2.write("        return '" + decision2 + "'\n")
             
             
         # Check if graphical interface wants us to exit the game
