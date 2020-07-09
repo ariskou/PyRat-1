@@ -67,4 +67,3 @@ def turn (maze_map, maze_width, maze_height, player_location, opponent_location,
     return MOVE_UP
 
 
-

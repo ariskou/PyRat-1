@@ -21,8 +21,8 @@ import random
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--rat', type=str, metavar = "rat_file", help='Program to control the rat', default="")
-parser.add_argument('--python', type=str, metavar = "python_file", help='Program to control the python', default="")
+parser.add_argument('--rat', type=str, metavar = "rat_file", help='Program to control the rat (local file or Google Colab shared link)', default="")
+parser.add_argument('--python', type=str, metavar = "python_file", help='Program to control the python (local file or Google Colab shared link)', default="")
 parser.add_argument('-x', '--width', type=int, metavar = "x", help='Width of the maze', default=31)
 parser.add_argument('-y', '--height', type=int, metavar = "y", help='Height of the maze', default=29)
 parser.add_argument('-d', '--density', type=float, metavar = "d", help='Targetted density of walls', default=0.7)
