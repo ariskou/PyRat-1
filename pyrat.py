@@ -32,6 +32,8 @@ import signal
 import pygame
 import traceback
 import datetime
+import gdown
+import ipynb_py_convert
 
 if args.import_keras:
     import keras
@@ -64,7 +66,17 @@ def play_sound(effect):
 
 # Function to handle a player, this is intended to be launched by a separate process
 def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, turn_time):
-    # First we try to launch a regular AI
+    # If user provides a Google Colab shared link, we use it
+    if filename[:4] == "http" and "colab" in filename :
+        file_id = filename.split("/")[-1].split("?")[0]
+        url = "https://drive.google.com/uc?id=" + file_id
+        base_dir = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "AIs" + os.path.sep
+        ipynb_file_name = base_dir + file_id + ".ipynb"
+        py_file_name = base_dir + file_id + ".py"
+        gdown.download(url, ipynb_file_name)
+        ipynb_py_convert.convert(ipynb_file_name, py_file_name)
+        filename = py_file_name
+    # We try to launch a regular AI
     try:
         player = importlib.util.spec_from_file_location("player",filename)
         module = importlib.util.module_from_spec(player)
