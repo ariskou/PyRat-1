@@ -76,6 +76,13 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         gdown.download(url, ipynb_file_name)
         ipynb_py_convert.convert(ipynb_file_name, py_file_name)
         filename = py_file_name
+    # If user provides a local notebook file
+    if filename[-6:] == ".ipynb" :
+        base_dir = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "AIs" + os.path.sep
+        file_id = filename.split(os.path.sep)[-1].split(".ipynb")[0]
+        py_file_name = base_dir + file_id + ".py"
+        ipynb_py_convert.convert(filename, py_file_name)
+        filename = py_file_name
     # We try to launch a regular AI
     try:
         player = importlib.util.spec_from_file_location("player",filename)
