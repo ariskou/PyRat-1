@@ -19,8 +19,10 @@ import random
 
 
 
-# Function that returns a random move
+
 def random_move () :
+    
+    # Returns a random move
     all_moves = [MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP]
     return random.choice(all_moves)
 

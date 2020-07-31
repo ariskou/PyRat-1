@@ -72,9 +72,12 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         url = "https://drive.google.com/uc?id=" + file_id
         base_dir = os.path.dirname(os.path.realpath(__file__)) + os.path.sep + "AIs" + os.path.sep
         ipynb_file_name = base_dir + file_id + ".ipynb"
-        py_file_name = base_dir + file_id + ".py"
         gdown.download(url, ipynb_file_name)
+        with open(ipynb_file_name, "r") as ipynb_file :
+            notebook_name = ipynb_file.read().split(".ipynb")[0].split("name\":\"")[1]
+        py_file_name = base_dir + notebook_name + ".py"
         ipynb_py_convert.convert(ipynb_file_name, py_file_name)
+        os.remove(ipynb_file_name)
         filename = py_file_name
     # If user provides a local notebook file
     if filename[-6:] == ".ipynb" :
