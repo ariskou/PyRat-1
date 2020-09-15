@@ -613,5 +613,5 @@ def main():
     pygame.quit()
 
 if __name__ == "__main__":
-    mp.set_start_method("spawn")
+    #mp.set_start_method("spawn") # Add that if there is a weird bug with OSX...
     main()

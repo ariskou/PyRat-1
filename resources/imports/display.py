@@ -369,7 +369,8 @@ def run(maze, width, height, q, q_render_in, q_quit, p1name, p2name, q1_out, q2_
 
             debug("Drawing on screen",2)
             if not(args.save_images):
-                pygame.display.flip()
+                #pygame.display.tick() # Replace with following line to avoid a bug on OSX
+                pygame.display.update()
             if not(args.desactivate_animations):
                 clock.tick(60)
             else:
