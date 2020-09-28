@@ -34,6 +34,7 @@ import traceback
 import datetime
 import gdown
 import ipynb_py_convert
+import json
 
 if args.import_keras:
     import keras
@@ -74,7 +75,11 @@ def player(pet, filename, q_in, q_out, q_quit, width, height, preparation_time, 
         ipynb_file_name = base_dir + file_id + ".ipynb"
         gdown.download(url, ipynb_file_name)
         with open(ipynb_file_name, "r") as ipynb_file :
-            notebook_name = ipynb_file.read().split(".ipynb")[0].split("name\":\"")[1]
+            #notebook_name = ipynb_file.read().split(".ipynb")[0].split("name\":\"")[1]
+            notebook_json = json.load(ipynb_file)
+            notebook_name = notebook_json["metadata"]["colab"]["name"]
+            if notebook_name.endswith(".ipynb"):
+                notebook_name = notebook_name[:-len(".ipynb")]
         py_file_name = base_dir + notebook_name + ".py"
         ipynb_py_convert.convert(ipynb_file_name, py_file_name)
         os.remove(ipynb_file_name)
