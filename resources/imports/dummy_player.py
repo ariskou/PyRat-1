@@ -59,3 +59,25 @@ def turn (maze_map, maze_width, maze_height, player_location, opponent_location,
 
 
 
+##############################################################
+# The postprocessing function is called at the end of a game
+# It can be used to perform computations after the game to guide
+# improvements in the design of a player.
+# ------------------------------------------------------------
+# maze : dict(pair(int, int), dict(pair(int, int), int))
+# width : int
+# height : int
+# player1_location : pair(int, int)
+# player2_location : pair(int,int)
+# score1 : float
+# score2 : float
+# pieces_of_cheese : list(pair(int, int))
+# turn_time : float
+##############################################################
+
+def postprocessing(maze, width, height, player1_location, player2_location, score1, score2, pieces_of_cheese, turn_time):
+
+    # Does nothing
+    return
+
+
